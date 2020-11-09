@@ -1,0 +1,51 @@
+<idea-plugin>
+    <id>com.zl.gdg.plugin</id>
+    <name>GDG Cross Alk Show</name>
+    <version>1.0</version>
+    <vendor email="1098832322@qq.com" url="http://wishes-blog.cn">Wishes' Blog</vendor>
+
+    <description><![CDATA[
+     <h2>郭德纲相声插件</h2>
+     <h2>代码写累了吗？不如摸一会儿鱼，听段儿相声吧~~~</h2><br>
+     <p>使用喜马拉雅的API，插件会先从目标网址获取音频，因为源格式为M4A，因此在下载完成后还会自动进行转码，待转码成MP3后才会进行播放。初次下载请耐心等待！</p>
+     <ul>
+         <li>可在：" Setting - Other Settings - GDG Setting"  配置音频缓存文件下载路径 </li>
+         <li> 双击列表进行播放 </li>
+     </ul>
+    ]]></description>
+
+    <change-notes><![CDATA[
+     <b> v1.0 初版 支持自定义缓存文件路径，支持跨平台。 </b><br>
+     <p>使用喜马拉雅的API，插件会先从目标网址获取音频，因为源格式为M4A，因此在下载完成后还会自动进行转码，待转码成MP3后才会进行播放。初次下载请耐心等待！</p>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="183.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <toolWindow canCloseContents="true"
+                    id="GDG Console"
+                    anchor="bottom"
+                    factoryClass="ui.PluginToolWindow">
+        </toolWindow>
+
+        <!-- Services -->
+        <applicationService serviceImplementation="components.AppSettingsState"/>
+
+        <!-- Setting Configurable -->
+        <applicationConfigurable parentId="other settings" displayName="GDG Setting"
+                                 instance="components.AppSettingConfigurable"
+                                 id="components.AppSettingConfigurable"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+</idea-plugin>
