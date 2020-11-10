@@ -2,21 +2,41 @@
     <id>com.zl.gdg.plugin</id>
     <name>GDG Cross Talk Show</name>
     <version>1.0</version>
-    <vendor email="1098832322@qq.com" url="http://wishes-blog.cn">Wishes' Blog</vendor>
+    <vendor email="1098832322@qq.com"
+            url="http://wishes-blog.cn/archives/idea%E7%9B%B8%E5%A3%B0%E6%8F%92%E4%BB%B6#%E6%A8%A1%E6%8B%9F%E8%AF%B7%E6%B1%82%E5%8F%8A%E8%A7%A3%E6%9E%90%E6%95%B0%E6%8D%AE">
+        Long Zheng
+    </vendor>
 
     <description><![CDATA[
-     <h2>郭德纲相声插件</h2>
-     <h2>代码写累了吗？不如摸一会儿鱼，听段儿相声吧~~~</h2><br>
-     <p>使用喜马拉雅的API，插件会先从目标网址获取音频，因为源格式为M4A，因此在下载完成后还会自动进行转码，待转码成MP3后才会进行播放。初次下载请耐心等待！</p>
-     <ul>
-         <li>可在：" Setting - Other Settings - GDG Setting"  配置音频缓存文件下载路径 </li>
-         <li> 双击列表进行播放 </li>
-     </ul>
+        <h2>Free Guo Degang Crosstalk plugin</h2>
+        <b>Tired at work? it’s better to take a break and listen to a cross talk~</b><br>
+        <p>How to use:</p>
+        <ul>
+            <li>Configure audio cache file download path: " Setting - Other Settings - GDG Setting"</li>
+            <li>Double click the list to play</li>
+        </ul>
+
+        enjoy it! :)
+        <br><br>
+        <hr/>
+        <h2>郭德纲相声插件</h2>
+        <b>代码写累了吗？不如摸一会儿鱼，听段儿相声吧~~~</b><br>
+        <p>使用喜马拉雅的API，插件会先从目标网址获取音频，因为源格式为M4A，因此在下载完成后还会自动进行转码，待转码成MP3后才会进行播放。初次下载请耐心等待！</p>
+        <ul>
+             <li>可在：" Setting - Other Settings - GDG Setting"  配置音频缓存文件下载路径 </li>
+             <li> 双击列表进行播放 </li>
+        </ul>
     ]]></description>
 
     <change-notes><![CDATA[
      <b> v1.0 初版 支持自定义缓存文件路径，支持跨平台。 </b><br>
-     <p>使用喜马拉雅的API，插件会先从目标网址获取音频，因为源格式为M4A，因此在下载完成后还会自动进行转码，待转码成MP3后才会进行播放。初次下载请耐心等待！</p>
+     <p>使用<a href="https://www.ximalaya.com/">喜马拉雅</a>的API，插件会先从目标网址获取音频，因为源格式为M4A，因此在下载完成后还会自动进行转码，待转码成MP3后才会进行播放。初次下载请耐心等待！</p>
+     <br><br>
+     <hr>
+     <b> v1.0 First version. Support custom cache file path and cross-platform.</b><br>
+     <p>Use <a href="https://www.ximalaya.com/">Himalaya</a> API.The plugin will first get the audio from the destination URL,
+     because the source format is M4A, it will automatically transcode after the download is complete.
+     Please be patient for the first download!</p>
     ]]>
     </change-notes>
 
