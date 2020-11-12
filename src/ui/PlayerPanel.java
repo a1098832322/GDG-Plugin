@@ -67,6 +67,11 @@ public class PlayerPanel extends JPanel implements MouseListener {
     private JProgressBar progressBar;
 
     /**
+     * 播放时间标签
+     */
+    private JLabel timeLabel;
+
+    /**
      * 播放状态
      */
     private boolean isPause = true;
@@ -119,14 +124,15 @@ public class PlayerPanel extends JPanel implements MouseListener {
 
         //进度条
         progressBar = new JProgressBar(SwingConstants.HORIZONTAL);
-        progressBar.setPreferredSize(new Dimension(230, 5));
+        progressBar.setPreferredSize(new Dimension(300, 5));
+
+        //音频时间
+        timeLabel = new JLabel("00:00");
 
         //页码输入框
         pageField = new JTextField("1");
         //页码按钮
         btnGoToPage = new JButton("Go");
-//        btnGoToPage.setBackground(JBColor.PINK);
-//        btnGoToPage.setForeground(JBColor.PINK);
         btnGoToPage.setPreferredSize(new Dimension(60, 30));
         btnGoToPage.addMouseListener(this);
 
@@ -140,10 +146,17 @@ public class PlayerPanel extends JPanel implements MouseListener {
         panel.add(new JLabel("页码:"));
         panel.add(pageField);
         panel.add(btnGoToPage);
-        //this.add(progressBar);
+
+        //播放进度条
+        JPanel processBarPanel = new JPanel();
+        processBarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        processBarPanel.add(progressBar);
+        //添加音频时间label
+        processBarPanel.add(timeLabel);
 
         this.add(title, BorderLayout.NORTH);
-        this.add(panel, BorderLayout.SOUTH);
+        this.add(panel, BorderLayout.CENTER);
+        this.add(processBarPanel, BorderLayout.SOUTH);
         this.setSize(width, height);
     }
 
