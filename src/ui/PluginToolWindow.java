@@ -6,16 +6,13 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.tulskiy.musique.model.Track;
 import com.zl.audio.ConvertingAnyAudioToMp3Sync;
-import com.zl.constants.Storage;
 import com.zl.network.DownloadListener;
 import com.zl.network.HttpClient;
 import com.zl.player.MusicPlayer;
 import com.zl.pojo.AlbumModel;
 import com.zl.pojo.TrackModel;
 import com.zl.util.FileUtil;
-import com.zl.util.OSinfo;
 import components.AppSettingsState;
 import listener.ConvertProgressListener;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +23,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * 创建侧边栏
@@ -55,8 +51,14 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
      */
     private JScrollPane playListScrollPane, musicScrollPane;
 
+    /**
+     * 音频列表
+     */
     public JList<TrackModel> musicList;
 
+    /**
+     * 专辑列表
+     */
     public JList<AlbumModel> playList;
 
     /**

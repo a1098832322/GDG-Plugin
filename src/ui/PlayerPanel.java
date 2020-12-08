@@ -1,15 +1,19 @@
 package ui;
 
-import com.intellij.ui.JBColor;
+import com.tulskiy.musique.audio.player.Player;
+import com.tulskiy.musique.model.Track;
+import com.tulskiy.musique.model.TrackData;
+import com.tulskiy.musique.util.Util;
 import com.zl.network.HttpClient;
 import com.zl.player.MusicPlayer;
 import com.zl.pojo.TrackModel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +68,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
     /**
      * 进度条
      */
-    private JProgressBar progressBar;
+    private JSlider progressSlider;
 
     /**
      * 播放时间标签
@@ -75,6 +79,16 @@ public class PlayerPanel extends JPanel implements MouseListener {
      * 播放状态
      */
     private boolean isPause = true;
+
+    /**
+     * 进度条启用状态
+     */
+    private boolean progressEnabled = false;
+
+    /**
+     * 定时器
+     */
+    private Timer timer;
 
     public List<TrackModel> getTrackList() {
         return trackList;
@@ -88,10 +102,77 @@ public class PlayerPanel extends JPanel implements MouseListener {
         this.mainWindowInstance = instance;
         this.width = width;
         this.height = height;
+        timer = new Timer(1000, e -> {
+            if (progressEnabled && musicPlayer.getCurrentPlayer().isPlaying()) {
+                progressSlider.setValue((int) musicPlayer.getCurrentPlayer().getCurrentSample());
+            }
+            if (musicPlayer.getCurrentPlayer().isPlaying()) {
+                updateTimeLabel();
+            }
+        });
+        timer.start();
+
         musicPlayer = MusicPlayer.getInstancePlayer();
+        //添加监听器
+        musicPlayer.addListener(e -> {
+            switch (e.getEventCode()) {
+                case PLAYING_STARTED:
+                    timer.start();
+                    break;
+                case PAUSED:
+                    timer.stop();
+                    break;
+                case STOPPED:
+                    timer.stop();
+                    progressEnabled = false;
+                    progressSlider.setValue(progressSlider.getMinimum());
+                    timeLabel.setText("-:--");
+                    break;
+                case FILE_OPENED:
+                    Track track = musicPlayer.getCurrentPlayer().getTrack();
+                    if (track != null) {
+                        int max = (int) track.getTrackData().getTotalSamples();
+                        if (max == -1) {
+                            progressEnabled = false;
+                        } else {
+                            progressEnabled = true;
+                            progressSlider.setMaximum(max);
+                        }
+                    }
+                    progressSlider.setValue((int) musicPlayer.getCurrentPlayer().getCurrentSample());
+                    updateTimeLabel();
+                    break;
+                case SEEK_FINISHED:
+                    //跳播放进度结束
+                    break;
+            }
+        });
         trackList = new ArrayList<>();
         currentTrackOnPlayIndex = 0;
         initUI();
+    }
+
+    /**
+     * 更新时间标记
+     */
+    private void updateTimeLabel() {
+        Player player = musicPlayer.getCurrentPlayer();
+        if (player.getTrack() != null) {
+            TrackData trackData = player.getTrack().getTrackData();
+            timeLabel.setText(Util.samplesToTime(player.getCurrentSample(),
+                    player.getTrack().getTrackData().getSampleRate(), 0) + "/" + trackData.getLength());
+        }
+    }
+
+    /**
+     * 获得X轴滑动值
+     *
+     * @param slider 滑动控件
+     * @param x      X轴值
+     * @return X轴差值
+     */
+    private int getSliderValueForX(JSlider slider, int x) {
+        return ((BasicSliderUI) slider.getUI()).valueForXPosition(x);
     }
 
     /**
@@ -123,11 +204,43 @@ public class PlayerPanel extends JPanel implements MouseListener {
         btnStop.addMouseListener(this);
 
         //进度条
-        progressBar = new JProgressBar(SwingConstants.HORIZONTAL);
-        progressBar.setPreferredSize(new Dimension(300, 5));
+        progressSlider = new JSlider(SwingConstants.HORIZONTAL);
+        progressSlider.setPreferredSize(new Dimension(300, 5));
+        progressSlider.setValue(0);
+        progressSlider.setFocusable(false);
+        //监听鼠标事件
+        progressSlider.addMouseListener(new MouseAdapter() {
+            //鼠标释放事件
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!progressEnabled) {
+                    return;
+                }
+                musicPlayer.getCurrentPlayer().seek(progressSlider.getValue());
+            }
+
+            //鼠标按下事件
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (!progressEnabled) {
+                    return;
+                }
+                progressSlider.setValue(getSliderValueForX(progressSlider, e.getX()));
+            }
+        });
+        //鼠标拖动事件
+        progressSlider.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (!progressEnabled) {
+                    return;
+                }
+                progressSlider.setValue(getSliderValueForX(progressSlider, e.getX()));
+            }
+        });
 
         //音频时间
-        timeLabel = new JLabel("00:00");
+        timeLabel = new JLabel("-:--");
 
         //页码输入框
         pageField = new JTextField("1");
@@ -150,7 +263,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
         //播放进度条
         JPanel processBarPanel = new JPanel();
         processBarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        processBarPanel.add(progressBar);
+        processBarPanel.add(progressSlider);
         //添加音频时间label
         processBarPanel.add(timeLabel);
 
