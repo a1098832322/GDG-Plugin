@@ -1,6 +1,6 @@
 # 郭德纲相声插件
-![Build日期](https://img.shields.io/badge/Build-2020--12--8-green) 
-![版本](https://img.shields.io/badge/Version-1.1-brightgreen)
+![Build日期](https://img.shields.io/badge/Build-2020--12--10-green) 
+![版本](https://img.shields.io/badge/Version-1.2-brightgreen)
 ![license](https://img.shields.io/badge/License-Apache%202.0-blue) 
 
 代码写累了吗？不如摸一会儿鱼，听段儿相声吧~~~ 
@@ -11,6 +11,14 @@
 1、音频核心依赖包 [点击查看](https://github.com/a1098832322/AudioCore)
 
 ### Change Log
+ #### v1.2 Build 2020-12-10
+ ``` 
+ 增加若干大家可能会用得到的功能。  
+  1.新增按列表顺序播放功能
+  2.新增按艺术家(自定义关键字)搜索曲目功能[部分搜索结果播放可能会有问题导致播放不出来。预计下个版本解决]
+  3.自动清理M4A格式的音频缓存文件，节省磁盘空间
+      
+  ``` 
  #### v1.1 Build 2020-12-8
  ``` 
  增加进度条功能。  
