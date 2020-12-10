@@ -63,6 +63,7 @@
      <br><br>
      <b> v1.1 Add progress bar.</b><br>
      <p>Now you can adjust the playback progress.</p>
+     <br><br>
      <b> v1.0 First version. Support custom cache file path and cross-platform.</b><br>
      <p>Use <a href="https://www.ximalaya.com/">Himalaya</a> API.The plugin will first get the audio from the destination URL,
      because the source format is M4A, it will automatically transcode after the download is complete.
