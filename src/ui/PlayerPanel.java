@@ -6,7 +6,6 @@ import com.tulskiy.musique.model.TrackData;
 import com.tulskiy.musique.util.Util;
 import com.zl.network.HttpClient;
 import com.zl.player.MusicPlayer;
-import com.zl.pojo.TrackModel;
 import components.AppSettingsState;
 
 import javax.swing.*;
@@ -16,8 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,11 +33,6 @@ public class PlayerPanel extends JPanel implements MouseListener {
      * MusicPlayer
      */
     public static MusicPlayer musicPlayer;
-
-    /**
-     * 播放列表
-     */
-    private List<TrackModel> trackList;
 
     /**
      * 当前播放音频的序号
@@ -97,8 +89,13 @@ public class PlayerPanel extends JPanel implements MouseListener {
      */
     private Timer timer;
 
-    public List<TrackModel> getTrackList() {
-        return trackList;
+    /**
+     * 播放列表长度
+     */
+    private int trackListSize = 0;
+
+    public void setTrackListSize(int trackListSize) {
+        this.trackListSize = trackListSize;
     }
 
     public void setCurrentTrackOnPlayIndex(int currentTrackOnPlayIndex) {
@@ -122,6 +119,8 @@ public class PlayerPanel extends JPanel implements MouseListener {
         musicPlayer = MusicPlayer.getInstancePlayer();
         //添加监听器
         musicPlayer.addListener(e -> {
+            Track track = musicPlayer.getCurrentPlayer().getTrack();
+
             switch (e.getEventCode()) {
                 case PLAYING_STARTED:
                     timer.start();
@@ -134,13 +133,21 @@ public class PlayerPanel extends JPanel implements MouseListener {
                 case STOPPED:
                     timer.stop();
                     progressEnabled = false;
-                    progressSlider.setValue(progressSlider.getMinimum());
                     timeLabel.setText("-:--");
                     //停止播放时可以修改艺术家
                     ArtistPanel.unlockArtistEditTextField();
+
+                    //判断是用户停止还是播放完毕
+                    if (track.getTrackData().getTotalSamples() == progressSlider.getMaximum()) {
+                        //是播放完毕，则尝试自动播放下一首
+                        currentTrackOnPlayIndex = Math.min(currentTrackOnPlayIndex + 1, trackListSize);
+                        mainWindowInstance.play(currentTrackOnPlayIndex);
+
+                    }
+
+                    progressSlider.setValue(progressSlider.getMinimum());
                     break;
                 case FILE_OPENED:
-                    Track track = musicPlayer.getCurrentPlayer().getTrack();
                     if (track != null) {
                         int max = (int) track.getTrackData().getTotalSamples();
                         if (max == -1) {
@@ -159,7 +166,6 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     break;
             }
         });
-        trackList = new ArrayList<>();
         currentTrackOnPlayIndex = 0;
         initUI();
     }
@@ -329,14 +335,11 @@ public class PlayerPanel extends JPanel implements MouseListener {
             musicPlayer.stop();
         } else if (btnLast.equals(e.getComponent())) {
             //获得播放序号
-            mainWindowInstance.playOrDownload(trackList.get(Optional.of(currentTrackOnPlayIndex - 1)
-                    .filter(i -> i > 0).orElse(0)));
-            currentTrackOnPlayIndex = Math.max(currentTrackOnPlayIndex - 1, 0);
+            currentTrackOnPlayIndex = Math.max(currentTrackOnPlayIndex - 1, -1);
+            mainWindowInstance.play(currentTrackOnPlayIndex);
         } else if (btnNext.equals(e.getComponent())) {
-            mainWindowInstance.playOrDownload(trackList.get(Optional.of(currentTrackOnPlayIndex + 1)
-                    .filter(i -> i < trackList.size())
-                    .orElse(trackList.size())));
-            currentTrackOnPlayIndex = Math.min(currentTrackOnPlayIndex + 1, trackList.size());
+            currentTrackOnPlayIndex = Math.min(currentTrackOnPlayIndex + 1, trackListSize);
+            mainWindowInstance.play(currentTrackOnPlayIndex);
         } else if (btnGoToPage.equals(e.getComponent())) {
             new Thread(() -> {
                 try {

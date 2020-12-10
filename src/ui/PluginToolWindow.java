@@ -14,6 +14,7 @@ import com.zl.pojo.AlbumModel;
 import com.zl.pojo.TrackModel;
 import com.zl.util.FileUtil;
 import components.AppSettingsState;
+import components.AutoPlay;
 import listener.ConvertProgressListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 创建侧边栏
@@ -30,7 +32,7 @@ import java.io.IOException;
  * @author 郑龙
  * @date 2020/10/10 10:00
  */
-public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory {
+public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory, AutoPlay {
     /**
      * 双击事件
      */
@@ -204,12 +206,11 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
 
             //查播放列表详情
             try {
-                playerPanel.getTrackList().clear();
-                HttpClient.queryAlbumDetailById(entity.getAlbumId()).forEach(trackModel -> {
-                    trackModelList.addElement(trackModel);
-                    //保存播放列表
-                    playerPanel.getTrackList().add(trackModel);
-                });
+                List<TrackModel> musicList = HttpClient.queryAlbumDetailById(entity.getAlbumId());
+                //设置播放列表长度
+                playerPanel.setTrackListSize(musicList.size());
+                //添加进AWT列表
+                musicList.forEach(trackModel -> trackModelList.addElement(trackModel));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -222,7 +223,7 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
      *
      * @param trackModel 音频对象实体
      */
-    public void playOrDownload(TrackModel trackModel) {
+    private void playOrDownload(TrackModel trackModel) {
         PlayerPanel.btnPlayOrPause.setText("▶");
 
         //不使用内置路径
@@ -257,6 +258,7 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                                 fileSize[0] = (double) max / 1024;
                                 PlayerPanel.title.setText(" 开始下载: " + trackModel.getTrackName());
                                 //禁用所有
+                                ArtistPanel.lockArtistEditTextField();
                                 disableOrEnableAllComponent(playerPanel, false);
                                 disableOrEnableAllComponent(mainPanel, false);
                                 playList.setEnabled(false);
@@ -275,7 +277,6 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                                 PlayerPanel.title.setText(trackModel.getTrackName() + "下载完成!");
 
                                 //M4A转码MP3
-
                                 PlayerPanel.title.setText(" 开始转码");
                                 ConvertingAnyAudioToMp3Sync.convertingAnyAudioToMp3WithAProgressListener(new File(path)
                                         , new File(playFileName), new ConvertProgressListener(process -> {
@@ -324,9 +325,22 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                 player.loadMusicSrc(playFileName);
                 player.openMusic();
             }
+
+            ArtistPanel.unlockArtistEditTextField();
             PlayerPanel.title.setText(" " + trackModel.getTrackName());
 
+        }
+    }
 
+    @Override
+    public void play(int index) {
+        if (!trackModelList.isEmpty()) {
+            if (index < trackModelList.size() && index >= 0) {
+                //设置选中
+                musicList.setSelectedIndex(index);
+                //播放
+                playOrDownload(trackModelList.get(index));
+            }
         }
     }
 }
