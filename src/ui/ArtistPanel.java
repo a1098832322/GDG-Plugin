@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 /**
  * 艺术家切换面板
@@ -26,7 +28,21 @@ public class ArtistPanel extends JPanel {
     /**
      * 输入框
      */
-    public static JTextField textField;
+    private static JTextField textField;
+
+    /**
+     * 锁定艺术家输入框
+     */
+    public static void lockArtistEditTextField() {
+        textField.setEnabled(false);
+    }
+
+    /**
+     * 解锁艺术家输入框
+     */
+    public static void unlockArtistEditTextField() {
+        textField.setEnabled(true);
+    }
 
     public ArtistPanel(int width, int height) {
         this.currentArtist = AppSettingsState.getInstance().keyword;
@@ -48,6 +64,16 @@ public class ArtistPanel extends JPanel {
         textField = new JTextField();
         textField.setPreferredSize(new Dimension(290, 30));
         textField.setText(currentArtist);
+        //文本框在失焦时获取其中文本
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String text = textField.getText();
+                if (StringUtils.isNotBlank(text)) {
+                    AppSettingsState.getInstance().keyword = text;
+                }
+            }
+        });
         this.add(label);
         this.add(textField);
     }

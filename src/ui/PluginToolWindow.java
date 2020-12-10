@@ -255,7 +255,7 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                             @Override
                             public void start(long max) {
                                 fileSize[0] = (double) max / 1024;
-                                PlayerPanel.title.setText("开始下载: " + trackModel.getTrackName());
+                                PlayerPanel.title.setText(" 开始下载: " + trackModel.getTrackName());
                                 //禁用所有
                                 disableOrEnableAllComponent(playerPanel, false);
                                 disableOrEnableAllComponent(mainPanel, false);
@@ -266,7 +266,7 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                             @Override
                             public void loading(int progress) {
                                 double percent = (progress / fileSize[0]) * 100;
-                                PlayerPanel.title.setText("下载中: " + String.format("%.2f", percent) + "%");
+                                PlayerPanel.title.setText(" 下载中: " + String.format("%.2f", percent) + "%");
                             }
 
                             @Override
@@ -276,15 +276,15 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
 
                                 //M4A转码MP3
 
-                                PlayerPanel.title.setText("开始转码");
+                                PlayerPanel.title.setText(" 开始转码");
                                 ConvertingAnyAudioToMp3Sync.convertingAnyAudioToMp3WithAProgressListener(new File(path)
                                         , new File(playFileName), new ConvertProgressListener(process -> {
-                                            PlayerPanel.title.setText("转码中: " + process + "%");
+                                            PlayerPanel.title.setText(" 转码中: " + process + "%");
                                             return process;
                                         }));
 
 
-                                PlayerPanel.title.setText(trackModel.getTrackName());
+                                PlayerPanel.title.setText(" " + trackModel.getTrackName());
                                 //启用所有控件
                                 disableOrEnableAllComponent(playerPanel, true);
                                 disableOrEnableAllComponent(mainPanel, true);
@@ -324,7 +324,7 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                 player.loadMusicSrc(playFileName);
                 player.openMusic();
             }
-            PlayerPanel.title.setText(trackModel.getTrackName());
+            PlayerPanel.title.setText(" " + trackModel.getTrackName());
 
 
         }

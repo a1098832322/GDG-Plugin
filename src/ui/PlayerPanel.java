@@ -126,7 +126,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
                 case PLAYING_STARTED:
                     timer.start();
                     //正在播放时禁止修改艺术家
-                    ArtistPanel.textField.setEnabled(false);
+                    ArtistPanel.lockArtistEditTextField();
                     break;
                 case PAUSED:
                     timer.stop();
@@ -137,7 +137,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     progressSlider.setValue(progressSlider.getMinimum());
                     timeLabel.setText("-:--");
                     //停止播放时可以修改艺术家
-                    ArtistPanel.textField.setEnabled(true);
+                    ArtistPanel.unlockArtistEditTextField();
                     break;
                 case FILE_OPENED:
                     Track track = musicPlayer.getCurrentPlayer().getTrack();
@@ -212,7 +212,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
      */
     public void initUI() {
         //标题
-        title = new JLabel("未播放");
+        title = new JLabel(" 未播放");
         title.setFont(new Font("字体", Font.BOLD, 24));
 
         //上一曲
@@ -340,6 +340,9 @@ public class PlayerPanel extends JPanel implements MouseListener {
         } else if (btnGoToPage.equals(e.getComponent())) {
             new Thread(() -> {
                 try {
+                    //锁定艺术家信息框
+                    ArtistPanel.lockArtistEditTextField();
+                    //清空列表数据
                     mainWindowInstance.getPlayListModel().clear();
                     mainWindowInstance.getTrackModelList().clear();
                     HttpClient.doSearch(AppSettingsState.getInstance().keyword, Optional.ofNullable(pageField.getText()).map(s -> {
@@ -360,6 +363,8 @@ public class PlayerPanel extends JPanel implements MouseListener {
                         return 1;
                     }).orElse(1)).forEach(albumModel -> mainWindowInstance.getPlayListModel()
                             .addElement(albumModel));
+                    //解锁输入框
+                    ArtistPanel.unlockArtistEditTextField();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
