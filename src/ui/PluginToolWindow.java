@@ -42,6 +42,11 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
     private JPanel mainPanel;
 
     /**
+     * 艺术家控件
+     */
+    private ArtistPanel artistPanel;
+
+    /**
      * 播放器控件窗口
      */
     private PlayerPanel playerPanel;
@@ -81,13 +86,20 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
 
     public PluginToolWindow() {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        artistPanel = new ArtistPanel(400, 50);
+        artistPanel.setPreferredSize(new Dimension(400, 50));
         mainPanel = new JPanel(new BorderLayout(10, 5));
         playerPanel = new PlayerPanel(this, 400, 200);
+        playerPanel.setPreferredSize(new Dimension(400, 160));
 
         //初始化两个列表
         initScrollPaneView(screen);
 
-        mainPanel.add(playerPanel, BorderLayout.NORTH);
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
+        headerPanel.add(artistPanel);
+        headerPanel.add(playerPanel);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         JPanel listPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         listPanel.add(playListScrollPane);

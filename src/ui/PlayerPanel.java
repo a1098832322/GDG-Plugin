@@ -10,11 +10,12 @@ import com.zl.pojo.TrackModel;
 import components.AppSettingsState;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -124,6 +125,8 @@ public class PlayerPanel extends JPanel implements MouseListener {
             switch (e.getEventCode()) {
                 case PLAYING_STARTED:
                     timer.start();
+                    //正在播放时禁止修改艺术家
+                    ArtistPanel.textField.setEnabled(false);
                     break;
                 case PAUSED:
                     timer.stop();
@@ -133,6 +136,8 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     progressEnabled = false;
                     progressSlider.setValue(progressSlider.getMinimum());
                     timeLabel.setText("-:--");
+                    //停止播放时可以修改艺术家
+                    ArtistPanel.textField.setEnabled(true);
                     break;
                 case FILE_OPENED:
                     Track track = musicPlayer.getCurrentPlayer().getTrack();
@@ -284,7 +289,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
         btnGoToPage.setPreferredSize(new Dimension(60, 30));
         btnGoToPage.addMouseListener(this);
 
-        this.setLayout(new BorderLayout(10, 5));
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel.add(btnLast);
@@ -302,9 +307,9 @@ public class PlayerPanel extends JPanel implements MouseListener {
         //添加音频时间label
         processBarPanel.add(timeLabel);
 
-        this.add(title, BorderLayout.NORTH);
-        this.add(panel, BorderLayout.CENTER);
-        this.add(processBarPanel, BorderLayout.SOUTH);
+        this.add(title);
+        this.add(panel);
+        this.add(processBarPanel);
         this.setSize(width, height);
     }
 
