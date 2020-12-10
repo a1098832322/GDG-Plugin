@@ -124,8 +124,6 @@ public class PlayerPanel extends JPanel implements MouseListener {
             switch (e.getEventCode()) {
                 case PLAYING_STARTED:
                     timer.start();
-                    //正在播放时禁止修改艺术家
-                    ArtistPanel.lockArtistEditTextField();
                     break;
                 case PAUSED:
                     timer.stop();
@@ -134,8 +132,6 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     timer.stop();
                     progressEnabled = false;
                     timeLabel.setText("-:--");
-                    //停止播放时可以修改艺术家
-                    ArtistPanel.unlockArtistEditTextField();
 
                     //判断是用户停止还是播放完毕
                     if (track.getTrackData().getTotalSamples() == progressSlider.getMaximum()) {
