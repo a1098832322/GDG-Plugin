@@ -228,11 +228,11 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
 //        }).orElse(Storage.WINDOWS_PATH);
 
         //使用配置路径
-        String path = AppSettingsState.getInstance().storagePath;
+        final String dirPath = AppSettingsState.getInstance().storagePath;
 
-        if (FileUtil.judeDirExists(new File(path))) {
-            String downloadFileName = path + trackModel.getTrackName() + ".m4a";
-            String playFileName = path + trackModel.getTrackName() + ".mp3";
+        if (FileUtil.judeDirExists(new File(dirPath))) {
+            String downloadFileName = dirPath + trackModel.getTrackName() + ".m4a";
+            String playFileName = dirPath + trackModel.getTrackName() + ".mp3";
 
             if (!FileUtil.contain(playFileName)) {
                 //文件大小
@@ -285,6 +285,9 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                                 MusicPlayer player = MusicPlayer.getInstancePlayer();
                                 player.loadMusicSrc(playFileName);
                                 player.openMusic();
+
+                                //所有步骤完成后清理M4A缓存文件
+                                FileUtil.cleanM4aCache(dirPath);
                             }
 
                             @Override
@@ -310,6 +313,8 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
                 player.openMusic();
             }
             PlayerPanel.title.setText(trackModel.getTrackName());
+
+
         }
     }
 }
