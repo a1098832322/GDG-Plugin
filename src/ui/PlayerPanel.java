@@ -7,6 +7,7 @@ import com.tulskiy.musique.util.Util;
 import com.zl.network.HttpClient;
 import com.zl.player.MusicPlayer;
 import com.zl.pojo.TrackModel;
+import components.AppSettingsState;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -86,6 +87,11 @@ public class PlayerPanel extends JPanel implements MouseListener {
     private boolean progressEnabled = false;
 
     /**
+     * 是否正在拖动进度条
+     */
+    private boolean isSeeking = false;
+
+    /**
      * 定时器
      */
     private Timer timer;
@@ -106,7 +112,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
             if (progressEnabled && musicPlayer.getCurrentPlayer().isPlaying()) {
                 progressSlider.setValue((int) musicPlayer.getCurrentPlayer().getCurrentSample());
             }
-            if (musicPlayer.getCurrentPlayer().isPlaying()) {
+            if (musicPlayer.getCurrentPlayer().isPlaying() && !isSeeking) {
                 updateTimeLabel();
             }
         });
@@ -144,6 +150,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     break;
                 case SEEK_FINISHED:
                     //跳播放进度结束
+                    isSeeking = false;
                     break;
             }
         });
@@ -157,9 +164,19 @@ public class PlayerPanel extends JPanel implements MouseListener {
      */
     private void updateTimeLabel() {
         Player player = musicPlayer.getCurrentPlayer();
+        updateTimeLabel(player.getCurrentSample());
+    }
+
+    /**
+     * 根据当前时间更新时间标记
+     *
+     * @param currentSample 当前时间
+     */
+    private void updateTimeLabel(long currentSample) {
+        Player player = musicPlayer.getCurrentPlayer();
         if (player.getTrack() != null) {
             TrackData trackData = player.getTrack().getTrackData();
-            timeLabel.setText(Util.samplesToTime(player.getCurrentSample(),
+            timeLabel.setText(Util.samplesToTime(currentSample,
                     player.getTrack().getTrackData().getSampleRate(), 0) + "/" + trackData.getLength());
         }
     }
@@ -226,6 +243,8 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     return;
                 }
                 progressSlider.setValue(getSliderValueForX(progressSlider, e.getX()));
+                //修改时间标签显示
+                updateTimeLabel(progressSlider.getValue());
             }
         });
         //鼠标拖动事件
@@ -235,7 +254,13 @@ public class PlayerPanel extends JPanel implements MouseListener {
                 if (!progressEnabled) {
                     return;
                 }
+                //修改标记，表示正在拖动进度条
+                isSeeking = true;
+                //修改进度条值
                 progressSlider.setValue(getSliderValueForX(progressSlider, e.getX()));
+                //修改时间标签显示
+                updateTimeLabel(progressSlider.getValue());
+
             }
         });
 
@@ -302,7 +327,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
                 try {
                     mainWindowInstance.getPlayListModel().clear();
                     mainWindowInstance.getTrackModelList().clear();
-                    HttpClient.doSearch(Optional.ofNullable(pageField.getText()).map(s -> {
+                    HttpClient.doSearch(AppSettingsState.getInstance().keyword, Optional.ofNullable(pageField.getText()).map(s -> {
                         try {
                             int page = Integer.parseInt(s);
                             if (page <= 0) {

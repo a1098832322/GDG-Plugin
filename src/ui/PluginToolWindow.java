@@ -143,7 +143,7 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory 
         playListModel.clear();
         new Thread(() -> {
             try {
-                HttpClient.doSearch(1).forEach(albumModel -> playListModel.addElement(albumModel));
+                HttpClient.doSearch(AppSettingsState.getInstance().keyword, 1).forEach(albumModel -> playListModel.addElement(albumModel));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

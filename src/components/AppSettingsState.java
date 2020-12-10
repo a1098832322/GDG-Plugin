@@ -20,8 +20,15 @@ import org.jetbrains.annotations.Nullable;
         storages = {@Storage("GDGSettingsPlugin.xml")}
 )
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
-
+    /**
+     * 缓存文件路径
+     */
     public String storagePath = "/usr/GDG_XIANGSHENG/";
+
+    /**
+     * 关键词
+     */
+    public String keyword = "郭德纲";
 
     public static AppSettingsState getInstance() {
         return ServiceManager.getService(AppSettingsState.class);
