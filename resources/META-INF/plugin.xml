@@ -14,7 +14,8 @@
         <ul>
             <li>Configure audio cache file download path: " Setting - Other Settings - GDG Setting"</li>
             <li>Double click the list to play</li>
-            <li>You can search by custom artist name.[bug: Can't play some artist's audio,this problem will be resolve by next version.]</li>
+            <li>You can search by custom artist name.  [bug: Can't play some artist's audio,this problem will be resolve by next version.] <br>
+        Enter keywords and click the 'Go' button to search.</li>
             <li>You can adjust the playback progress</li>
         </ul>
 
@@ -27,7 +28,8 @@
         <ul>
              <li>可在：" Setting - Other Settings - GDG Setting"  配置音频缓存文件下载路径 </li>
              <li> 双击列表进行播放 </li>
-             <li> 可以按艺术家(自定义关键字)搜索曲目功能[部分搜索结果播放可能会有问题导致播放不出来。预计下个版本解决]</li>
+             <li> 可以按艺术家(自定义关键字)搜索曲目功能  [部分搜索结果播放可能会有问题导致播放不出来。预计下个版本解决]<br>
+        输入艺术家名字后，点击"Go"按钮进行搜索。</li>
              <li> 拖动进度条调整进度 </li>
         </ul>
     ]]></description>
@@ -36,7 +38,7 @@
      <b> v1.2 增加若干大家可能会用得到的功能。</b><br>
      <ul>
         <li>新增按列表顺序播放功能</li>
-        <li>新增按艺术家(自定义关键字)搜索曲目功能[部分搜索结果播放可能会有问题导致播放不出来。预计下个版本解决]。<br>
+        <li>新增按艺术家(自定义关键字)搜索曲目功能  [部分搜索结果播放可能会有问题导致播放不出来。预计下个版本解决]。<br>
         输入艺术家名字后，点击"Go"按钮进行搜索。</li>
         <li>自动清理M4A格式的音频缓存文件，节省磁盘空间</li>
      </ul>
@@ -52,7 +54,7 @@
      <b> v1.2 Add some useful functions。</b><br>
      <ul>
         <li>Now you can play in list order</li>
-        <li>You can search by custom artist name.[bug: Can't play some artist's audio,this problem will be resolve by next version.]<br>
+        <li>You can search by custom artist name.   [bug: Can't play some artist's audio,this problem will be resolve by next version.]<br>
         Enter keywords and click the 'Go' button to search.</li>
         <li>Automatically clean up audio cache files in M4A format</li>
      </ul>
