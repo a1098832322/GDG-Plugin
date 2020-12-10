@@ -164,7 +164,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
      */
     private void updateTimeLabel() {
         Player player = musicPlayer.getCurrentPlayer();
-        updateTimeLabel(player.getCurrentSample());
+        updateTimeLabel(player.getCurrentSample(), player);
     }
 
     /**
@@ -174,6 +174,16 @@ public class PlayerPanel extends JPanel implements MouseListener {
      */
     private void updateTimeLabel(long currentSample) {
         Player player = musicPlayer.getCurrentPlayer();
+        updateTimeLabel(currentSample, player);
+    }
+
+    /**
+     * 根据当前时间更新时间标记
+     *
+     * @param currentSample 当前时间
+     * @param player        音乐播放器实例
+     */
+    private void updateTimeLabel(long currentSample, Player player) {
         if (player.getTrack() != null) {
             TrackData trackData = player.getTrack().getTrackData();
             timeLabel.setText(Util.samplesToTime(currentSample,
