@@ -85,6 +85,11 @@ public class PlayerPanel extends JPanel implements MouseListener {
     private boolean isSeeking = false;
 
     /**
+     * 表示停止按钮是否已点击
+     */
+    private boolean isStopButtonClicked = false;
+
+    /**
      * 定时器
      */
     private Timer timer;
@@ -134,11 +139,10 @@ public class PlayerPanel extends JPanel implements MouseListener {
                     timeLabel.setText("-:--");
 
                     //判断是用户停止还是播放完毕
-                    if (track.getTrackData().getTotalSamples() == progressSlider.getMaximum()) {
+                    if (!isStopButtonClicked) {
                         //是播放完毕，则尝试自动播放下一首
                         currentTrackOnPlayIndex = Math.min(currentTrackOnPlayIndex + 1, trackListSize);
                         mainWindowInstance.play(currentTrackOnPlayIndex);
-
                     }
 
                     progressSlider.setValue(progressSlider.getMinimum());
@@ -317,6 +321,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        isStopButtonClicked = false;
         if (btnPlayOrPause.equals(e.getComponent())) {
             isPause = !isPause;
             if (isPause) {
@@ -329,6 +334,7 @@ public class PlayerPanel extends JPanel implements MouseListener {
         } else if (btnStop.equals(e.getComponent())) {
             btnPlayOrPause.setText("▶");
             musicPlayer.stop();
+            isStopButtonClicked = true;
         } else if (btnLast.equals(e.getComponent())) {
             //获得播放序号
             currentTrackOnPlayIndex = Math.max(currentTrackOnPlayIndex - 1, -1);
