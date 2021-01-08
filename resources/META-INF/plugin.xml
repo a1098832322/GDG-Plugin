@@ -37,6 +37,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
+     <b> v1.3 修复若干bug。</b><br>
+     <ul>
+        <li>修复停止按钮点击时会自动加载下一曲的bug</li>
+        <li>新增无法播放的VIP曲目提示</li>
+     </ul>
+     <br><br>
      <b> v1.2 增加若干大家可能会用得到的功能。</b><br>
      <ul>
         <li>新增按列表顺序播放功能</li>
@@ -53,6 +59,12 @@
 
      <hr>
 
+     <b> v1.3 Fix some bug。</b><br>
+     <ul>
+        <li>Fix : the next song will be automatically loaded when the stop button is clicked</li>
+        <li>Added reminder for VIP tracks that cannot be played</li>
+     </ul>
+     <br><br>
      <b> v1.2 Add some useful functions。</b><br>
      <ul>
         <li>Now you can play in list order</li>
