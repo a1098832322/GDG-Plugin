@@ -335,6 +335,8 @@ public class PlayerPanel extends JPanel implements MouseListener {
             btnPlayOrPause.setText("▶");
             musicPlayer.stop();
             isStopButtonClicked = true;
+            //解锁艺术家框
+            ArtistPanel.unlockArtistEditTextField();
         } else if (btnLast.equals(e.getComponent())) {
             //获得播放序号
             currentTrackOnPlayIndex = Math.max(currentTrackOnPlayIndex - 1, -1);

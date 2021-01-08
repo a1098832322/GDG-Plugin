@@ -2,6 +2,7 @@ package ui;
 
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
@@ -16,6 +17,7 @@ import com.zl.util.FileUtil;
 import components.AppSettingsState;
 import components.AutoPlay;
 import listener.ConvertProgressListener;
+import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -207,10 +209,15 @@ public class PluginToolWindow extends MouseAdapter implements ToolWindowFactory,
             //查播放列表详情
             try {
                 List<TrackModel> musicList = HttpClient.queryAlbumDetailById(entity.getAlbumId());
-                //设置播放列表长度
-                playerPanel.setTrackListSize(musicList.size());
-                //添加进AWT列表
-                musicList.forEach(trackModel -> trackModelList.addElement(trackModel));
+                if (CollectionUtils.isNotEmpty(musicList)) {
+                    //设置播放列表长度
+                    playerPanel.setTrackListSize(musicList.size());
+                    //添加进AWT列表
+                    musicList.forEach(trackModel -> trackModelList.addElement(trackModel));
+                } else {
+                    //弹出提示框
+                    Messages.showWarningDialog("该曲目可能为VIP曲目，无法白嫖播放!", "提示");
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
