@@ -31,7 +31,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
     public String keyword = "郭德纲";
 
     public static AppSettingsState getInstance() {
-        return ServiceManager.getService(AppSettingsState.class);
+        return ApplicationManager.getApplication().getService(AppSettingsState.class);
     }
 
     @Nullable
